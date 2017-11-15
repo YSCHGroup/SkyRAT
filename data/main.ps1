@@ -67,27 +67,30 @@ function skyrat-execute($cmd) {                         ########################
     ¨¨¨¨¨¨¨                ¨¨¨¨¨¨¨¨¨¨¨
   ::Core Commands::
     help                   Help menu
-    build                  Build a new client exe file              [Under Construction]
-    clients                List all online clients              [Under Construction]
-    connect                Connect to a client and start sending packages
-    settings               Manage all settings              [Under Construction]
+    build                  Build a new client exe file                       [Under Construction]
+    clients                List all online clients
+    connect                Connect to a client and start sending packages    [Under Construction]
+    settings               Manage all settings                               [Under Construction]
     shell                  Open a shell on the local computer
     version                Display the current version number
-    cls                    Clear screen              [Under Construction]
-    menu                   Display the menu again              [Under Construction]
-    exit                   Exit out from SkyRAT              [Under Construction]
+    cls                    Clear screen
+    menu                   Display the menu again
+    exit                   Exit out from SkyRAT
 
-  ::Note Commands::
+  ::Other Commands::
     notes                  Show all saved notes
     note add [string]      Add a new note to notes
     note remove [line]     Remove a note from notes
     note clear             Clear all notes
+    tips (tips number)     Show all available built in tips and trix!
 
   ::Shell Commands::
-    Skyrat              Return to the SkyRAT interface
-    back                Return to the SkyRAT interface
+    skyrat/back/exit       Return to the SkyRAT interface
+
 
   (If you see weird unicode characters above, change the console font to Consolas!)
+  If you'd like to run SkyRAT from a cmd/ps promp, just use the command 'skyrat'!
+
 "
     }elseif ($SkyRAT_input.ToLower() -eq "shell") {                                 # Shell
         skyrat-shell
@@ -149,14 +152,35 @@ function skyrat-execute($cmd) {                         ########################
     }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
         # Execute all code inside here
 
-    }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
-        # Execute all code inside here
+    }elseif ($SkyRAT_input.ToLower().StartsWith("tips") -eq $true) {                # tips
+         $tip = $SkyRAT_input.Split(" ")
+         if (($tip[1] -eq "") -or ($SkyRAT_input.ToLower() -eq "tips")) {
+         Write-Host "
+    Command                Description
+    ¨¨¨¨¨¨¨                ¨¨¨¨¨¨¨¨¨¨¨
+1.  Custom Colors!!!       Change the default color of the prompt interface!
+        "}elseif ($tip -eq "1") {                                                  # All SkyRAT Tips!
+            Write-Host "
+    Custom Colors!!!
+    ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+/// Change the default color of the prompt interface! ///
+    1. shell
+    2. cmd
+    3. color (color of choice, /h for list)
+    4. exit
+    5. exit
+    ";
+        }else {
+            Write-Host "[ERROR] That tips does not exits..." -f Red;
+        }
 
-    }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
-        # Execute all code inside here
 
-    }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
-        # Execute all code inside here
+    }elseif ($SkyRAT_input.ToLower() -eq "menu") {                                  # menu
+        cls
+        main
+    }elseif ($SkyRAT_input.ToLower() -eq "cls") {                                   # cls
+        cls
+        skyrat-input
 
     }elseif ($SkyRAT_input.ToLower() -eq "notes") {                                 # notes
         if (Test-Path "C:\Users\$env:UserName\AppData\LocalLow\notes.txt") {
@@ -237,6 +261,8 @@ function skyrat-shell {
             skyrat-input
         }elseif ($SkyRAT_input.ToLower() -eq "skyrat") {
             skyrat-input
+        }elseif ($SkyRAT_input.ToLower() -eq "exit") {
+            skyrat-input
         }else {
             Invoke-Expression $SkyRAT_input
         }
@@ -253,7 +279,7 @@ function skyrat-shell {
 [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 $SkyratVersion = "v1.0.0 (Alpha)"
-
+(Get-Item -Path ".\" -Verbose).FullName | Out-File "C:\tmp\skyhome.txt"                            # Output file folder to a temp file used when executing the program from a cmd prompt
 
 # Main loop
 function main {
