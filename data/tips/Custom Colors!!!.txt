@@ -1,0 +1,7 @@
+#Change the default color of the prompt interface!#
+Follow these commands:
+    1. shell
+    2. cmd
+    3. color (color of choice, /h for list)
+    4. exit
+    5. exit

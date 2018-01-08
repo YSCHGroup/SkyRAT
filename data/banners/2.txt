@@ -1,0 +1,8 @@
+<>
+<white>                         <.><yellow>.RATSR* SR               <.><magenta>SKYRATX     RAT  SKYRATSR<..>
+<white>           ((((          <.><yellow>SR.     SR..SR* SR.  .SR <.><magenta>SR*  *SR   SR SR   'SR'<..>
+<white>           {  '>          <.><yellow>*RATX. RAT*'    *X.SR*' <.><magenta>SR...RAT   SR.SR    SR<..>
+<white>           / ,\             <.><yellow>..SR SR*SR    *SR*'   <.><magenta>SKYRAT.   SR*X*SR   SR<..>
+<white>          /_/ /         <.><yellow>.RATSR** SR 'SR. .X*'     <.><magenta>SR   SR <.><blue>¤<.><magenta> SR   SR <.><blue>¤<.><magenta> SR <.><blue>¤<.><magenta><..>
+<darkgray>  ----===<.><white>//<.><darkgray>==<.><white>'<.><darkgray>============::::::::::::::::::=================--------------<..>
+<white>        / <.>

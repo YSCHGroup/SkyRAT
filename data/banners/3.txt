@@ -1,0 +1,15 @@
+$startColor = $Host.UI.RawUI.BackgroundColor;
+$Host.UI.RawUI.BackgroundColor = "darkBlue";
+<darkred>                                                                      .---.        .-----------  <..>
+<cyan>   //////<.><darkred>\  <.><cyan>//<.><darkred>\                  <.><cyan>///////<.><darkred>\   <.><cyan>//////<.><darkred>\ <.><cyan>////////<.><darkred>\        /     \  __  /    ------    <..>
+<cyan>  <.><cyan>//  <.><darkred>__<.><cyan>//<.><darkred>\ <.><cyan>//<.><darkred> |                 <.><cyan>// <.><darkred> __<.><cyan>//<.><darkred>\ <.><cyan>// <.><darkred> __<.><cyan>//<.><darkred>\\__<.><cyan>//  <.><darkred>__|      / /     \(<.><cyan>..<.><darkred>)/    -----      <..>
+<cyan>  <.><cyan>// <.><darkred>/  \__|<.><cyan>// <.><darkred>|  <.><cyan>//<.><darkred>\ <.><cyan>//<.><darkred>\   <.><cyan>//<.><darkred>\  <.><cyan>//<.><darkred> |  <.><cyan>// <.><darkred>|<.><cyan>// <.><darkred>/  <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|        //////   ' \/ `   --           <..>
+<darkred>  \<.><cyan>//////<.><darkred>\  <.><cyan>// <.><darkred>| <.><cyan>//  <.><darkred>|<.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>| <.><cyan>///////  <.><darkred>|<.><cyan>//////// <.><darkred>|  <.><cyan>// <.><darkred>|       //// / // :    : ---           <..>
+<darkred>   \____<.><cyan>//<.><darkred>\ <.><cyan>//////  <.><darkred>/ <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>| <.><cyan>//  <.><darkred>__<.><cyan>//<.><darkred>< <.><cyan>//  <.><darkred>__<.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|      // /   /  /`    '--              <..>
+<cyan>  //<.><darkred>\   <.><cyan>// <.><darkred>|<.><cyan>//  <.><darkred>_<.><cyan>//<.><darkred><  <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>| <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|<.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|     //          //..\\               <..>
+<darkred>  \<.><cyan>//////  <.><darkred>|<.><cyan>// <.><darkred>| \<.><cyan>//<.><darkred>\ \<.><cyan>/////// <.><darkred>| <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|<.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|  <.><cyan>// <.><darkred>|            ====UU====UU====          <..>
+<darkred>   \______/ \__|  \__| \____<.><cyan>// <.><darkred>| \__|  \__|\__|  \__|  \__|                '//||\\'              <..>
+<cyan>                      //<.><darkred>\   <.><cyan>// <.><darkred>|                                             '**'                <..>
+$Host.UI.RawUI.BackgroundColor = $startColor;
+<darkred>                      \<.><cyan>//////  <.><darkred>|<..>
+<darkred>                       \______/<..>
